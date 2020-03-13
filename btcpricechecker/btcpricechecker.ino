@@ -10,7 +10,11 @@ char wifiSSID[] = "iPhoneDeYuji";
 char wifiPASS[] = "startagaiN";
 
 // VSPI
-GxEPD2_BW<GxEPD2_154, GxEPD2_154::HEIGHT> display(GxEPD2_154(/*CS=5*/ SS, /*DC*/ 22, /*RST*/ 21, /*BUSY*/ 4));
+// GxEPD2_BW<GxEPD2_154, GxEPD2_154::HEIGHT> display(GxEPD2_154(/*CS=5*/ SS, /*DC*/ 22, /*RST*/ 21, /*BUSY*/ 4));
+
+// HSPI
+GxEPD2_BW<GxEPD2_154, GxEPD2_154::HEIGHT> display(GxEPD2_154(/*CS=15*/ 15, /*DC*/ 25, /*RST*/ 4, /*BUSY*/ 17));
+SPIClass* hspi = NULL;
   
 const char* host = "blockchain.info";
 const int httpPort = 443;
@@ -18,6 +22,11 @@ const String on_currency = "USD";
 String price;
 
 void setup() {
+  // Configure to use HSPI
+  hspi = new SPIClass(HSPI);
+  hspi->begin();
+  pinMode(/*HSPI_SS*/ 15, OUTPUT); 
+  
   // put your setup code here, to run once:
   Serial.begin(115200);
 
