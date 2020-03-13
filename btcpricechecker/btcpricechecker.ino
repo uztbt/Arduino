@@ -1,13 +1,21 @@
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
+
 #include <ArduinoJson.h>
+#include <GxEPD2_BW.h>
+#include <GxEPD2_3C.h>
+#include <Fonts/FreeSansBold18pt7b.h>
 
 char wifiSSID[] = "iPhoneDeYuji";
 char wifiPASS[] = "startagaiN";
 
+// VSPI
+GxEPD2_BW<GxEPD2_154, GxEPD2_154::HEIGHT> display(GxEPD2_154(/*CS=5*/ SS, /*DC*/ 22, /*RST*/ 21, /*BUSY*/ 4));
+  
 const char* host = "blockchain.info";
 const int httpPort = 443;
-const String on_currency = "JPY";
+const String on_currency = "USD";
+String price;
 
 void setup() {
   // put your setup code here, to run once:
@@ -20,6 +28,27 @@ void setup() {
   }
   Serial.println("connected");
 
+  /* Epaper display settings */
+  display.init(115200);
+  display.setFont(&FreeSansBold18pt7b);
+  display.setTextColor(GxEPD_BLACK);
+
+  BTCprice();
+
+  display.firstPage();
+  do {
+    display.fillScreen(GxEPD_WHITE);
+    display.setCursor(0, 80);
+    display.print("1 BTC is\n" + price);
+  } while (display.nextPage());
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+}
+
+void BTCprice() {
   WiFiClientSecure client;
   if (!client.connect(host, httpPort)) {
     return;
@@ -60,11 +89,6 @@ void setup() {
   }
   
   String priceStr = doc[on_currency]["15m"];
-  String symbolStr = doc[on_currency]["symbol"];
-  Serial.println(symbolStr + priceStr);
-}
-
-void loop() {
-  // put your main code here, to run repeatedly:
-
+  price = priceStr + on_currency;
+  Serial.println(price);
 }
