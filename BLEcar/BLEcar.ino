@@ -57,64 +57,38 @@ class ServerCallbacks : public BLECharacteristicCallbacks
 {
   void onWrite(BLECharacteristic *bleCharacteristic)
   {
-    //    std::string value = bleCharacteristic->getValue();
     uint8_t value = *(bleCharacteristic->getData());
-
-    // Serial.print("New value: ");
-    // for (int i = 0; i < value.length(); i++)
-    //   Serial.print(value[i]);
-    // Serial.println();
-    // if (value == "a")
-    // {
-    //   // Left forward
-    //   rotateLeft(true);
-    //   stopRight();
-    //   return;
-    // }
-    // if (value == "b")
-    // {
-    //   // Left backward
-    //   rotateLeft(false);
-    //   stopRight();
-    //   return;
-    // }
-
-    // if (value == "c")
-    // {
-    //   // Both forward
-    //   rotateLeft(true);
-    //   rotateRight(true);
-    //   return;
-    // }
-    // if (value == "d")
-    // {
-    //   // Right forward
-    //   stopLeft();
-    //   rotateRight(true);
-    //   return;
-    // }
-    // if (value == "e")
-    // {
-    //   // Right backward
-    //   stopLeft();
-    //   rotateRight(false);
-    //   return;
-    // }
-    // if (value == "f")
-    // {
-    //   // Both backward
-    //   rotateLeft(false);
-    //   rotateRight(false);
-    //   return;
-    // }
     switch (value)
     {
+    Serial.println("Command Value = " + value);
     case 1:
+      // Forward
       rotateLeft(true);
       rotateRight(true);
       break;
     case 2:
+      // Forward - Turn Right
+      rotateLeft(true);
+      stopRight();
+      break;
+    case 3:
+      // Forward - Turn Left
+      stopLeft();
+      rotateRight(true);
+      break;
+    case 4:
+      // Backward
       rotateLeft(false);
+      rotateRight(false);
+      break;
+    case 5:
+      // Backward - Turn Right
+      rotateLeft(false);
+      stopRight();
+      break;
+    case 6:
+      // Backward - Turn Left
+      stopLeft();
       rotateRight(false);
       break;
     default:
