@@ -67,29 +67,19 @@ class ServerCallbacks : public BLECharacteristicCallbacks
       rotateRight(true);
       break;
     case 2:
-      // Forward - Turn Right
+      // Turn Right
       rotateLeft(true);
       stopRight();
       break;
-    case 3:
-      // Forward - Turn Left
-      stopLeft();
-      rotateRight(true);
-      break;
-    case 4:
+   case 3:
       // Backward
       rotateLeft(false);
       rotateRight(false);
       break;
-    case 5:
-      // Backward - Turn Right
-      rotateLeft(false);
-      stopRight();
-      break;
-    case 6:
-      // Backward - Turn Left
+    case 4:
+      // Turn Left
       stopLeft();
-      rotateRight(false);
+      rotateRight(true);
       break;
     default:
       stopLeft();
