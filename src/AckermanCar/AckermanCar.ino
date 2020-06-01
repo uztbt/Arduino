@@ -7,31 +7,33 @@
 #define STEERING_CHARACTERISTIC_UUID "dbba9389-a24f-49f4-9063-8bc7e479bc35"
 #define MOTOR_CHARACTERISTIC_UUID "43a5be68-47a6-4bf7-a903-89405a0fc603"
 #define BLE_DEVICE_NAME "AckermanCar"
-#define MIN_ANGLE 50
+#define MIN_ANGLE 0
 #define MAX_ANGLE 130
+#define STEPS 7
+#define STEP_ANGLE (MAX_ANGLE - MIN_ANGLE) / STEPS
 #define STEERING_REF 13
-#define MD_IN1 27
-#define MD_IN2 14
+#define MD_IN1 14
+#define MD_IN2 27
 #define MD_VREF 12
 
 Servo steering;
+int angle = (MAX_ANGLE + MIN_ANGLE) / 2;
 
 bool steer(uint8_t direction)
 {
   switch (direction)
   {
-  case 0:
-    steering.write(0);
-    return true;
   case 1:
-    steering.write(MIN_ANGLE);
-    return true;
+    angle = max(0, angle - STEP_ANGLE);
+    break;
   case 2:
-    steering.write(MAX_ANGLE);
-    return true;
+    angle = min(MAX_ANGLE, angle + STEP_ANGLE);
+    break;
   default:
     return false;
   }
+  steering.write(angle);
+  return true;
 }
 
 bool drive(uint8_t direction)
@@ -93,6 +95,8 @@ void setup()
   pinMode(MD_IN1, OUTPUT);
   pinMode(MD_IN2, OUTPUT);
   pinMode(MD_VREF, OUTPUT);
+
+  steering.attach(STEERING_REF);
 
   BLEDevice::init(BLE_DEVICE_NAME);
 
