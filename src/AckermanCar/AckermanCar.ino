@@ -12,9 +12,8 @@
 #define STEPS 7
 #define STEP_ANGLE (MAX_ANGLE - MIN_ANGLE) / STEPS
 #define STEERING_REF 13
-#define MD_IN1 14
+#define MD_IN1 12
 #define MD_IN2 27
-#define MD_VREF 12
 
 Servo steering;
 int angle = (MAX_ANGLE + MIN_ANGLE) / 2;
@@ -94,7 +93,6 @@ void setup()
   pinMode(STEERING_REF, OUTPUT);
   pinMode(MD_IN1, OUTPUT);
   pinMode(MD_IN2, OUTPUT);
-  pinMode(MD_VREF, OUTPUT);
 
   steering.attach(STEERING_REF);
 
