@@ -1,0 +1,37 @@
+@startuml
+
+Main -> Main: setup()
+activate Main
+Main -> BLEDevice: init()
+BLEDevice -> BLEScan: getScan()
+activate BLEScan
+BLEScan -> BLEScan: setAdvertisedDeviceCallbacks()
+BLEAdvertisedDeviceCallbacks --> BLEScan
+BLEScan -> BLEScan: setActiveScan(true)
+BLEScan -> BLEScan: start(duration, is_continue)
+deactivate Main
+Main -> Main: loop()
+activate Main
+BLEScan --> BLEAdvertisedDeviceCallbacks
+entity BLEAdvertisedDevice
+BLEAdvertisedDevice -> BLEAdvertisedDeviceCallbacks: onResult()
+activate BLEAdvertisedDeviceCallbacks
+BLEAdvertisedDeviceCallbacks -> BLEAdvertisedDevice: isAdvertisingService(UUID)
+BLEAdvertisedDevice --> BLEAdvertisedDeviceCallbacks: true
+BLEAdvertisedDeviceCallbacks --> BLEScan: stop()
+deactivate BLEScan
+BLEAdvertisedDeviceCallbacks --> Main: doConnect = true, doScan = true, mydevice = BLEAdvertisedDevice
+deactivate BLEAdvertisedDeviceCallbacks
+BLEDevice -> BLEClient: createClient()
+activate BLEClient
+BLEClient -> BLEClient: setClientCallbacks()
+MyClientCallback --> BLEClient
+BLEClient -> BLEClient: connect(myDevice)
+BLEClient -> BLERemoteService: getService(serviceUUID)
+activate BLERemoteService
+BLERemoteService -> BLERemoteCharacteristic: getCharacteristic(charUUID
+deactivate BLERemoteService
+BLEClient --> Main: connected = true
+deactivate BLEClient
+Main -> BLERemoteCharacteristic: writeValue()
+@enduml
